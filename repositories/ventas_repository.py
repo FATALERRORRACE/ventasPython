@@ -18,22 +18,41 @@ class VentasRepository:
             vendedor_id=vendedor_id,
             observaciones=observaciones,
             estado=estado
-            # fecha_creacion=fecha_creacion
         )
 
-        self.db.query(
-            "INSERT INTO ventas (numero_factura, fecha_venta, cliente_id, subtotal, descuento_total, total_venta, metodo_pago_id, vendedor_id, observaciones, estado, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (
-                self.venta.numero_factura,
-                self.venta.fecha_venta,
-                self.venta.cliente_id,
-                self.venta.subtotal,
-                self.venta.descuento_total,
-                self.venta.total_venta,
-                self.venta.metodo_pago_id,
-                self.venta.vendedor_id,
-                self.venta.observaciones,
-                self.venta.estado,
-                self.venta.fecha_creacion
-            )
+        # Check if the venta already exists by numero_factura
+        existing = self.db.query(
+            "SELECT COUNT(*) FROM ventas WHERE numero_factura = ?",
+            (self.venta.numero_factura,)
         )
+
+        if existing and isinstance(existing, list) and existing[0][0] > 0:
+            # Update existing venta
+            return self.db.query(
+                "UPDATE ventas SET subtotal=subtotal+?, descuento_total=descuento_total+?, total_venta=total_venta+?, observaciones=TRIM(observaciones || ' - ' || ?) WHERE numero_factura=?",
+                (
+                    self.venta.subtotal,
+                    self.venta.descuento_total,
+                    self.venta.total_venta,
+                    self.venta.observaciones,
+                    self.venta.numero_factura
+                )
+            )
+        else:
+            # Insert new venta
+            return self.db.query(
+                "INSERT INTO ventas (numero_factura, fecha_venta, cliente_id, subtotal, descuento_total, total_venta, metodo_pago_id, vendedor_id, observaciones, estado, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    self.venta.numero_factura,
+                    self.venta.fecha_venta,
+                    self.venta.cliente_id,
+                    self.venta.subtotal,
+                    self.venta.descuento_total,
+                    self.venta.total_venta,
+                    self.venta.metodo_pago_id,
+                    self.venta.vendedor_id,
+                    self.venta.observaciones,
+                    self.venta.estado,
+                    self.venta.fecha_creacion
+                )
+            )

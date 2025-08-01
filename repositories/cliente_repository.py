@@ -12,5 +12,4 @@ class ClienteRepository:
             nombre=nombre,
             activo=activo
         )
-
-        self.db.query(f"INSERT INTO {self.cliente.__tablename__} (rut, nombre, activo) VALUES (?, ?, ?)", (self.cliente.rut, self.cliente.nombre, self.cliente.activo))
+        return self.db.query(f"INSERT INTO {self.cliente.__tablename__} (rut, nombre, activo) VALUES (?, ?, ?)", (self.cliente.rut, self.cliente.nombre, self.cliente.activo))

@@ -1,2 +1,3 @@
 para la correcta ejecución del script se debe instalar 
 pandas = pip install pandas
+sqlalchemy = pip install sqlalchemy

@@ -18,5 +18,10 @@ class Db:
             cursor.execute(query, params)
         else:
             cursor.execute(query)
-        self.conn.commit()
-        return cursor
+
+        if query.strip().lower().startswith("select"):
+            result = cursor.fetchall()
+            return result
+        elif query.strip().lower().startswith(("insert", "update", "delete")):
+            self.conn.commit()
+            return cursor
