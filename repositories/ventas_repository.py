@@ -56,3 +56,37 @@ class VentasRepository:
                     self.venta.fecha_creacion
                 )
             )
+        
+    def topDiez(self):
+        query = """
+            SELECT c.id, c.nombre, SUM(v.total_venta) AS total_ventas, COUNT(v.id) AS numero_ventas
+            FROM ventas v
+            JOIN clientes c ON v.cliente_id = c.id
+            WHERE v.estado = 'Completada'
+                AND v.fecha_venta >= DATE('now', '-6 months')
+            GROUP BY c.id, c.nombre
+            ORDER BY total_ventas DESC
+            LIMIT 10
+        """
+        return self.db.query(query)
+
+    def topDiezVendidos(self):
+        query = """
+            SELECT p.id, p.codigo_producto, SUM(vd.cantidad) AS total_unidades, SUM(vd.cantidad * vd.precio_unitario) AS total_ventas
+            FROM detalle_ventas vd
+            JOIN producto p ON vd.producto_id = p.id
+            GROUP BY p.id, p.codigo_producto
+            ORDER BY total_unidades DESC
+            LIMIT 10
+        """
+        return self.db.query(query)
+
+    def ventasDosMeses150mil(self):
+        query = """
+            SELECT *
+            FROM ventas
+            WHERE estado = 'Completada'
+                AND fecha_venta >= DATE('now', '-2 months')
+                AND total_venta > 150000
+        """
+        return self.db.query(query)

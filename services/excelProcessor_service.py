@@ -5,6 +5,7 @@ from repositories.metodo_pago_repository import MetodoPagoRepository
 from repositories.vendedor_responsable_repository import VendedorResponsableRepository
 from repositories.producto_repository import ProductoRepository
 from repositories.detalle_venta_repository import DetalleVentaRepository
+import time
 
 class ExcelProcessor:
     def __init__(self, path = '', sheetName = 'Sheet1'): 
@@ -35,15 +36,23 @@ class ExcelProcessor:
                 print(f"Fila excluida por rut inválido: {row.rut_cliente}")
                 continue
             counter+=1
-            self.validarProducto(row)
+
+            ## funciones que procesan los datos
             self.calcularTotales(row)
+            self.validarProducto(row)
             self.validarMetodoPago(row)
             self.validarVendedor(row)
             self.validarCliente(row)
             self.validarVenta(row)
             self.validarDetalleVenta(row)
+            # fin
 
         print(f"{counter} filas procesadas.")
+
+        self.mostrarTopValores()
+
+        print("Gracias 😀😀")
+
     def validarCliente(self, row):
         if row.rut_cliente not in self.clientesInfo:
             userCreated = self.clienteRepository.crear(
@@ -115,3 +124,20 @@ class ExcelProcessor:
             descuento_porcentaje=row.descuento_porcentaje,
             subtotal_linea=self.subtotal_linea
         )
+
+    def mostrarTopValores(self):
+        top_data = self.ventasRepository.topDiez()
+        print("💵 El top 10 de clientes que más han comprado en los 6 meses:")
+        for index, venta in enumerate(top_data, 1):
+            time.sleep(.5)
+            print(f"{index}. {venta}")
+        top_data = self.ventasRepository.topDiezVendidos()
+        print("💵 El top 10 de los productos más vendidos en todo el histórico:")
+        for index, venta in enumerate(top_data, 1):
+            time.sleep(.5)
+            print(f"{index}. {venta}")
+        top_data = self.ventasRepository.ventasDosMeses150mil()
+        print("💵 Todas las ventas completadas de los últimos 2 meses con valor mayor a $150.000:")
+        for index, venta in enumerate(top_data, 1):
+            time.sleep(.2)
+            print(f"{index}. {venta}")

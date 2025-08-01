@@ -18,7 +18,6 @@ class dataReader:
             return
         sheetName = input("Ingrese el nombre de la hoja a procesar, si dejas el campo vacío se usará \"Sheet1\" por defecto: ")
         #GENERAR LOOP DE RESPUESTAS AQUÍ TAMBIÉN
-        
+
         excelProcessorInstance = ExcelProcessor(filePath, (sheetName if sheetName else "Sheet1"))
         excelProcessorInstance.getData()
-        
