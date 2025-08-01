@@ -8,20 +8,21 @@ from repositories.detalle_venta_repository import DetalleVentaRepository
 import time
 
 class ExcelProcessor:
-    def __init__(self, path = '', sheetName = 'Sheet1'): 
-        # if not hasattr(self, 'metodoPagoRepository'): recordar validar cada atributo antes de inicializarlo 
-        # if not hasattr(self, 'vendedorResponsableRepository'):  recordar validar cada atributo antes de inicializarlo
-        self.clienteRepository = ClienteRepository() # Initialize repository for clientes
-        self.ventasRepository = VentasRepository() # Initialize repository for ventas
-        self.metodoPagoRepository = MetodoPagoRepository() # Initialize repository for clientes
-        self.vendedorResponsableRepository = VendedorResponsableRepository() # Initialize repository for ventas
-        self.productoRepository = ProductoRepository()
-        self.detalleVentaRepository = DetalleVentaRepository()
-        self.clientesInfo = {} # Dictionary with the clientes created during the execution
-        self.productoInfo = {}
-        self.ventasInfo = {} # Dictionary with the ventas created during the execution
-        self.metodoPagoInfo = {} # Dictionary with the clientes created during the execution
-        self.vendedorInfo = {} # Dictionary with the ventas created during the execution
+
+    clienteRepository = ClienteRepository() # Initialize repository for clientes
+    ventasRepository = VentasRepository() # Initialize repository for ventas
+    metodoPagoRepository = MetodoPagoRepository() # Initialize repository 
+    vendedorResponsableRepository = VendedorResponsableRepository() # Initialize repository 
+    productoRepository = ProductoRepository()
+    detalleVentaRepository = DetalleVentaRepository()
+    clientesInfo = {} # Dictionary with the clientes created during the execution
+    productoInfo = {}
+    ventasInfo = {} # Dictionary with the ventas created during the execution
+    metodoPagoInfo = {} # Dictionary with the clientes created during the execution
+    vendedorInfo = {} # Dictionary with the ventas created during the execution
+
+
+    def __init__(self, path = '', sheetName = 'Sheet1'):
         self.path = path
         self.sheetName = sheetName
         self.excel_reader = pd.read_excel(self.path, sheet_name = self.sheetName)
